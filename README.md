@@ -3,9 +3,8 @@
 [![License](https://img.shields.io/badge/license-CC%20BY--NC--SA%204.0-blue.svg)](LICENSE)
 [![GitHub stars](https://img.shields.io/github/stars/CG-spring/vps-security-pro.svg?style=flat-square)](https://github.com/CG-spring/vps-security-pro/stargazers)
 
-> VPS 安全防护进阶指南 - 企业级安全加固、防火墙配置与高级防护策略
-> 
-> 持续更新中 | 最后更新: 2026-03-31
+> VPS 安全防护进阶指南 - 企业级安全加固、防火墙配置与高级防护策?> 
+> 持续更新?| 最后更? 2026-03-31
 
 **中文** | **[English](README_EN.md)**
 
@@ -13,12 +12,12 @@
 
 ## 目录
 
-- [为什么需要进阶安全防护？](#为什么需要进阶安全防护)
+- [为什么需要进阶安全防护？](#为什么需要进阶安全防?
 - [SSH 高级加固](#ssh-高级加固)
 - [企业级防火墙配置](#企业级防火墙配置)
 - [fail2ban 高级配置](#fail2ban-高级配置)
 - [DDoS 防护方案](#ddos-防护方案)
-- [安全监控与告警](#安全监控与告警)
+- [安全监控与告警](#安全监控与告?
 - [安全脚本集合](#安全脚本集合)
 - [常见问题](#常见问题)
 
@@ -26,30 +25,29 @@
 
 ## 为什么需要进阶安全防护？
 
-### 普通防护 vs 企业级防护
-
-| 防护层级 | 普通方案 | 企业级方案 |
+### 普通防?vs 企业级防?
+| 防护层级 | 普通方?| 企业级方?|
 |----------|----------|------------|
-| SSH 加固 | 修改端口 | 密钥+IP白名单 |
-| 防火墙 | 基础端口 | 复杂规则+限流 |
-| 入侵检测 | 无 | 行为分析+告警 |
-| 日志分析 | 无 | 集中日志+分析 |
+| SSH 加固 | 修改端口 | 密钥+IP白名?|
+| 防火?| 基础端口 | 复杂规则+限流 |
+| 入侵检?| ?| 行为分析+告警 |
+| 日志分析 | ?| 集中日志+分析 |
 | 备份 | 手动 | 自动+异地 |
 
 ### 常见攻击类型
 
 | 攻击类型 | 危害 | 防御方案 |
 |----------|------|----------|
-| SSH 暴力破解 | 盗取服务器 | 密钥+fail2ban |
-| DDoS 攻击 | 服务不可用 | 流量清洗+限速 |
-| 供应链攻击 | 植入后门 | 安全更新 |
-| 0day 漏洞 | 未知风险 | 最小化暴露面 |
+| SSH 暴力破解 | 盗取服务?| 密钥+fail2ban |
+| DDoS 攻击 | 服务不可?| 流量清洗+限?|
+| 供应链攻?| 植入后门 | 安全更新 |
+| 0day 漏洞 | 未知风险 | 最小化暴露?|
 
 ---
 
 ## SSH 高级加固
 
-### 1. 双因素认证 (2FA)
+### 1. 双因素认?(2FA)
 
 ```bash
 # 安装 Google Authenticator
@@ -58,8 +56,7 @@ apt install -y libpam-google-authenticator
 # 配置 PAM
 vim /etc/pam.d/sshd
 
-# 添加以下行
-auth required pam_google_authenticator.so
+# 添加以下?auth required pam_google_authenticator.so
 
 # 配置 SSH
 vim /etc/ssh/sshd_config
@@ -75,8 +72,7 @@ systemctl restart sshd
 ### 2. SSH 密钥 + 密钥短语
 
 ```bash
-# 生成带密钥短语的密钥对
-ssh-keygen -t ed25519 -f ~/.ssh/vps_master -C "vps-master-key"
+# 生成带密钥短语的密钥?ssh-keygen -t ed25519 -f ~/.ssh/vps_master -C "vps-master-key"
 
 # 密钥短语：使用密码管理器保存
 
@@ -90,10 +86,10 @@ Host your-vps-ip
     IdentityFile ~/.ssh/vps_master
 ```
 
-### 3. IP 白名单 + 地理封锁
+### 3. IP 白名?+ 地理封锁
 
 ```bash
-# 只允许特定 IP 访问 SSH
+# 只允许特?IP 访问 SSH
 vim /etc/hosts.allow
 
 sshd: 1.2.3.4 :allow
@@ -103,7 +99,7 @@ vim /etc/hosts.deny
 
 sshd: ALL :deny
 
-# 或者使用 UFW 地理封锁
+# 或者使?UFW 地理封锁
 ufw deny from 某些国家 to any port 22
 ```
 
@@ -118,24 +114,22 @@ ufw deny from 某些国家 to any port 22
 ufw default deny incoming
 ufw default allow outgoing
 
-# 开放指定 IP 的 SSH (推荐)
+# 开放指?IP ?SSH (推荐)
 ufw allow from 1.2.3.4 to any port 22 proto tcp
 
 # 限流规则 - 防止暴力破解
 ufw limit from any to any port 22 proto tcp
 
-# 开放 HTTP/HTTPS
+# 开?HTTP/HTTPS
 ufw allow 80/tcp
 ufw allow 443/tcp
 
-# 开放常用服务端口
-ufw allow 3306/tcp comment 'MySQL'
+# 开放常用服务端?ufw allow 3306/tcp comment 'MySQL'
 ufw allow 5432/tcp comment 'PostgreSQL'
 ufw allow 6379/tcp comment 'Redis'
 ufw allow 27017/tcp comment 'MongoDB'
 
-# 启用防火墙
-ufw enable
+# 启用防火?ufw enable
 ```
 
 ### 2. iptables 高级规则
@@ -161,7 +155,7 @@ iptables -A INPUT -i lo -j ACCEPT
 # 允许已建立的连接
 iptables -A INPUT -m state --state ESTABLISHED,RELATED -j ACCEPT
 
-# SSH 限流 (每分钟 10 次)
+# SSH 限流 (每分?10 ?
 iptables -A INPUT -p tcp --dport 22 -m state --state NEW -m recent --set
 iptables -A INPUT -p tcp --dport 22 -m state --state NEW -m recent --update --seconds 60 --hitcount 10 -j DROP
 iptables -A INPUT -p tcp --dport 22 -j ACCEPT
@@ -174,8 +168,7 @@ iptables -A INPUT -p tcp --syn -j DROP
 iptables -A INPUT -p icmp --icmp-type echo-request -m limit --limit 1/s -j ACCEPT
 iptables -A INPUT -p icmp --icmp-type echo-request -j DROP
 
-# 开放服务端口
-iptables -A INPUT -p tcp --dport 80 -j ACCEPT
+# 开放服务端?iptables -A INPUT -p tcp --dport 80 -j ACCEPT
 iptables -A INPUT -p tcp --dport 443 -j ACCEPT
 
 # 保存规则
@@ -186,12 +179,12 @@ iptables-save > /etc/iptables/rules.v4
 
 ```bash
 #!/bin/bash
-# 自动封锁攻击者 IP
+# 自动封锁攻击?IP
 
 LOG_FILE="/var/log/auth.log"
 BLOCKED_IPS="/tmp/blocked_ips.txt"
 
-# 获取过去 1 小时尝试登录失败的 IP
+# 获取过去 1 小时尝试登录失败?IP
 BLOCKED=$(grep "Failed password" $LOG_FILE | grep "$(date -d '1 hour ago' +'%b %d')" | awk '{print $11}' | sort | uniq -c | awk '$1>10 {print $2}')
 
 # 封锁 IP
@@ -208,8 +201,7 @@ done
 
 ## fail2ban 高级配置
 
-### 1. 多监狱配置
-
+### 1. 多监狱配?
 ```bash
 # /etc/fail2ban/jail.local
 
@@ -270,39 +262,33 @@ ignoreregex =
 
 ## DDoS 防护方案
 
-### 1. 应用层防护
-
+### 1. 应用层防?
 ```nginx
 # Nginx DDoS 防护配置
 
-# 限制连接数
-limit_conn_zone $binary_remote_addr zone=addr:10m;
+# 限制连接?limit_conn_zone $binary_remote_addr zone=addr:10m;
 limit_req_zone $binary_remote_addr zone=one:10m rate=10r/s;
 
 server {
-    # 连接数限制
-    limit_conn addr 10;
+    # 连接数限?    limit_conn addr 10;
     
     # 请求频率限制
     limit_req zone=one burst=20 nodelay;
     
-    # 请求体大小限制
-    client_max_body_size 10M;
+    # 请求体大小限?    client_max_body_size 10M;
     
     # 超时设置
     client_body_timeout 10s;
     client_header_timeout 10s;
     
-    # 防盗链
-    valid_referers none blocked your-domain.com;
+    # 防盗?    valid_referers none blocked your-domain.com;
     if ($invalid_referer) {
         return 403;
     }
 }
 ```
 
-### 2. 系统级防护
-
+### 2. 系统级防?
 ```bash
 # /etc/sysctl.conf DDoS 防护
 
@@ -311,8 +297,7 @@ net.ipv4.tcp_syncookies = 1
 net.ipv4.tcp_syn_retries = 2
 net.ipv4.tcp_synack_retries = 2
 
-# 限制连接数
-net.ipv4.ip_local_port_range = 2000 65000
+# 限制连接?net.ipv4.ip_local_port_range = 2000 65000
 net.ipv4.tcp_max_tw_buckets = 2000
 net.ipv4.tcp_max_syn_backlog = 8192
 
@@ -326,50 +311,44 @@ sysctl -p
 
 ---
 
-## 安全监控与告警
-
-### 1. 实时安全仪表板
-
+## 安全监控与告?
+### 1. 实时安全仪表?
 ```bash
 #!/bin/bash
 # VPS 安全状态仪表板
 
 echo "=========================================="
-echo "     VPS 安全监控仪表板"
+echo "     VPS 安全监控仪表?
 echo "     $(date '+%Y-%m-%d %H:%M:%S')"
 echo "=========================================="
 echo ""
 
-# SSH 连接状态
-echo "[SSH 安全状态]"
+# SSH 连接状?echo "[SSH 安全状态]"
 echo "-----------------------------"
-echo "当前 SSH 连接数: $(who | wc -l)"
+echo "当前 SSH 连接? $(who | wc -l)"
 echo "SSH 失败登录 (今天): $(grep -c "$(date +%b\ %d)" /var/log/auth.log | head -1)"
-echo "fail2ban 封禁 IP 数: $(fail2ban-client banned | wc -l)"
+echo "fail2ban 封禁 IP ? $(fail2ban-client banned | wc -l)"
 echo ""
 
 # 网络连接
 echo "[网络连接状态]"
 echo "-----------------------------"
-echo "TCP 连接数: $(netstat -an | grep tcp | wc -l)"
-echo "UDP 连接数: $(netstat -an | grep udp | wc -l)"
+echo "TCP 连接? $(netstat -an | grep tcp | wc -l)"
+echo "UDP 连接? $(netstat -an | grep udp | wc -l)"
 echo "ESTABLISHED: $(netstat -an | grep ESTABLISHED | wc -l)"
 echo ""
 
-# 端口扫描检测
-echo "[可疑端口]"
+# 端口扫描检?echo "[可疑端口]"
 echo "-----------------------------"
 netstat -tuln | awk '{print $1,$4,$6}' | grep LISTEN
 echo ""
 
-# 防火墙状态
-echo "[防火墙状态]"
+# 防火墙状?echo "[防火墙状态]"
 echo "-----------------------------"
 ufw status | head -10
 echo ""
 
-# 最近安全事件
-echo "[最近安全事件]"
+# 最近安全事?echo "[最近安全事件]"
 echo "-----------------------------"
 tail -5 /var/log/auth.log | grep -i "failed\|error\|attack"
 echo ""
@@ -377,8 +356,7 @@ echo ""
 echo "=========================================="
 ```
 
-### 2. Telegram 告警机器人
-
+### 2. Telegram 告警机器?
 ```bash
 #!/bin/bash
 # 安全告警通知脚本
@@ -404,10 +382,9 @@ send_alert "⚠️ <b>VPS 安全告警</b>%0A检测到 SSH 暴力破解攻击%0A
 
 ```bash
 #!/bin/bash
-# VPS 企业级安全加固脚本
-
+# VPS 企业级安全加固脚?
 echo "=========================================="
-echo "  VPS 企业级安全加固脚本"
+echo "  VPS 企业级安全加固脚?
 echo "=========================================="
 
 # 1. 更新系统
@@ -427,8 +404,7 @@ sed -i "s/^Port 22/Port $SSH_PORT/" /etc/ssh/sshd_config
 sed -i "s/^#PermitRootLogin yes/PermitRootLogin no/" /etc/ssh/sshd_config
 sed -i "s/^#PasswordAuthentication yes/PasswordAuthentication no/" /etc/ssh/sshd_config
 
-# 4. 配置防火墙
-echo "[4/8] 配置防火墙..."
+# 4. 配置防火?echo "[4/8] 配置防火?.."
 ufw default deny incoming
 ufw default allow outgoing
 ufw allow $SSH_PORT/tcp
@@ -460,7 +436,7 @@ net.ipv4.tcp_max_syn_backlog = 8192
 EOF
 sysctl -p
 
-# 7. 安装 Fail2ban Web 界面 (可选)
+# 7. 安装 Fail2ban Web 界面 (可?
 # echo "[7/8] 安装 Fail2ban Web..."
 # apt install -y fail2ban-ui
 
@@ -475,7 +451,7 @@ echo "  安全加固完成!"
 echo "=========================================="
 echo "SSH 端口: $SSH_PORT"
 echo "请保存好 SSH 密钥!"
-echo "请重启服务器使所有配置生效!"
+echo "请重启服务器使所有配置生?"
 ```
 
 ---
@@ -486,9 +462,9 @@ echo "请重启服务器使所有配置生效!"
 
 | 解决方案 | 说明 |
 |----------|------|
-| 使用 VNC 控制台 | VPS 控制台提供的紧急登录 |
+| 使用 VNC 控制?| VPS 控制台提供的紧急登?|
 | 保留备用 SSH 端口 | 22 端口备用 |
-| IP 白名单 | 确保当前 IP 在白名单 |
+| IP 白名?| 确保当前 IP 在白名单 |
 
 ### Q2: 误封自己怎么办？
 
@@ -510,7 +486,7 @@ fail2ban-client stop
 | 端口扫描 | nmap -sS -sV -O your-vps-ip |
 | SSL 评级 | ssllabs.com/ssltest/ |
 | SSH 漏洞 | ssh-audit your-vps-ip |
-| DDoS 压力测试 | 请谨慎使用 |
+| DDoS 压力测试 | 请谨慎使?|
 
 ---
 
@@ -518,9 +494,9 @@ fail2ban-client stop
 
 | 名称 | 特点 | 价格 | 链接 |
 |------|------|------|------|
-| **VPSVIP** | 高性价比，中国优化 | ¥30/月起 | [官网](https://vpsvip.net) |
+| **VPSVIP** | VPS主机测评 | 服务器评测与推荐 | [官网](https://vpsvip.net) |
 | **Vultr** | 按小时计费，全球节点 | $3.5/月起 | [官网](https://vultr.com) |
-| **BandwagonHost** | 性价比高 | $49.99/年 | [官网](https://bandwagonhost.com) |
+| **BandwagonHost** | 性价比高 | $49.99/?| [官网](https://bandwagonhost.com) |
 
 ---
 

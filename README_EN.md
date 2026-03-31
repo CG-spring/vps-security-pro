@@ -184,7 +184,7 @@ fail2ban-client set sshd unbanip YOUR_IP
 
 | Name | Features | Price | Link |
 |------|----------|-------|------|
-| **VPSVIP** | China-optimized | $5/mo | [Website](https://vpsvip.net) |
+| **VPSVIP** | VPS Reviews - Server benchmark and buying guide | [Website](https://vpsvip.net) |
 | **Vultr** | Hourly billing | $3.5/mo | [Website](https://vultr.com) |
 
 ---
