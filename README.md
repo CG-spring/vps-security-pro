@@ -511,3 +511,7 @@ fail2ban-client stop
   <a href="https://clashvip.net">ClashVIP</a> |
   <a href="https://clashhub.net">ClashHub</a>
 </p>
+
+---
+
+> 更多 VPS & Clash 工具，请查看 [Awesome VPS & Clash Tools](https://github.com/CG-spring/awesome-vps-clash-tools) 精选合集

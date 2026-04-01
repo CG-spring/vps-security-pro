@@ -197,3 +197,7 @@ fail2ban-client set sshd unbanip YOUR_IP
   <a href="https://vpsvip.net">VPSVIP</a> |
   <a href="https://clashvip.net">ClashVIP</a>
 </p>
+
+---
+
+> For more VPS & Clash tools, check out [Awesome VPS & Clash Tools](https://github.com/CG-spring/awesome-vps-clash-tools)
